@@ -1,0 +1,925 @@
+<html><head>
+<!--<base href="https://ecolegestion.edu">-->
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Gestion d'Établissement Scolaire</title>
+<style>
+  :root {
+    --primary-color: #3498db;
+    --secondary-color: #2ecc71;
+    --background-color: #000000; /* Changé en noir */
+    --text-color: #ffffff; /* Changé en blanc pour un meilleur contraste */
+  }
+
+  body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    width: 90%;
+    margin: auto;
+    overflow: hidden;
+    padding: 20px;
+  }
+
+  header {
+    background: var(--primary-color);
+    color: white;
+    padding-top: 30px;
+    min-height: 70px;
+    border-bottom: 3px solid var(--secondary-color);
+  }
+
+  header a {
+    color: #ffffff;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 16px;
+  }
+
+  header .highlight, header .current a {
+    color: var(--secondary-color);
+    font-weight: bold;
+  }
+
+  header a:hover {
+    color: #ffffff;
+    font-weight: bold;
+  }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+  }
+
+  .logo {
+    font-size: 1.5em;
+  }
+
+  .menu {
+    display: flex;
+    list-style: none;
+  }
+
+  .menu li {
+    padding: 0 10px;
+  }
+
+  .menu-toggle {
+    display: none;
+    font-size: 1.5em;
+    color: white;
+    cursor: pointer;
+  }
+
+  .search-container {
+    display: flex;
+    gap: 10px;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+  }
+
+  #searchInput {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #ffffff;
+    color: #000000;
+  }
+
+  #refreshSearch {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  #refreshSearch:hover {
+    background-color: #27ae60;
+  }
+
+  main {
+    padding: 20px 0;
+  }
+
+  .card {
+    background: #222222; /* Changé pour un gris foncé pour contraster avec le fond noir */
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(255,255,255,0.1); /* Changé pour une ombre blanche */
+  }
+
+  h1, h2, h3 {
+    color: var(--primary-color);
+  }
+
+  button {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #27ae60;
+  }
+
+  input[type="text"], input[type="email"], input[type="password"], input[type="number"], select, input[type="tel"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  th {
+    background-color: var(--primary-color);
+    color: white;
+  }
+
+  tr:hover {
+    background-color: #333333; /* Changé pour un gris plus foncé */
+  }
+
+  .tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+  }
+
+  .tab-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .tab-button.active {
+    background-color: var(--secondary-color);
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  .modal-form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #333;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    z-index: 1000;
+    width: 90%;
+    max-width: 500px;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background: #444;
+    color: var(--text-color);
+    font-size: 1rem;
+  }
+
+  .form-info {
+    margin: 1rem 0;
+    padding: 0.8rem;
+    background: rgba(52, 152, 219, 0.1);
+    border-left: 4px solid var(--primary-color);
+    color: var(--text-color);
+  }
+
+  .form-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+  }
+
+  .form-buttons button {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+
+  .form-buttons button[type="submit"] {
+    background: var(--primary-color);
+    color: white;
+  }
+
+  .form-buttons button[type="button"] {
+    background: #666;
+    color: white;
+  }
+
+  @media(max-width: 768px) {
+    .container {
+      width: 100%;
+      padding: 10px;
+    }
+
+    header {
+      padding-top: 10px;
+      min-height: 50px;
+    }
+
+    .logo h1 {
+      font-size: 1.2em;
+    }
+
+    .menu {
+      display: none;
+      width: 100%;
+      position: absolute;
+      top: 60px;
+      left: 0;
+      background: var(--primary-color);
+      z-index: 1000;
+    }
+
+    .menu.active {
+      display: block;
+    }
+
+    .menu li {
+      display: block;
+      text-align: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--secondary-color);
+    }
+
+    .menu-toggle {
+      display: block;
+    }
+
+    .card {
+      padding: 10px;
+    }
+
+    button {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    table, thead, tbody, th, td, tr {
+      display: block;
+    }
+
+    thead tr {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+
+    tr {
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+
+    td {
+      border: none;
+      position: relative;
+      padding-left: 50%;
+    }
+
+    td:before {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      width: 45%;
+      padding-right: 10px;
+      white-space: nowrap;
+      content: attr(data-label);
+      font-weight: bold;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"], select, button {
+      font-size: 16px; 
+      height: 44px; 
+    }
+  }
+  
+  tr.highlighted {
+    background-color: #ff000033; /* Semi-transparent red */
+    font-weight: bold;
+  }
+  
+  tr:hover {
+    background-color: #333333 !important; /* Override the highlight on hover */
+  }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">
+        <h1><span class="highlight">CSP TEMPLE DU SAVOIR ADMINISTRATION</span>Gestion</h1>
+      </div>
+      <div class="menu-toggle"></div>
+      <ul class="menu">
+        <li class="current"><a href="#dashboard">Tableau de bord</a></li>
+        <li><a href="#eleves">Élèves</a></li>
+        <li><a href="#classes">Classes</a></li>
+        <li><a href="#paiements">Paiements</a></li>
+        <li><a href="#rapports">Rapports</a></li>
+      </ul>
+    </nav>
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Rechercher par nom, matricule ou ID...">
+      <button id="refreshSearch">Recharger</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="tabs">
+      <button class="tab-button active" data-tab="dashboard">Tableau de bord</button>
+      <button class="tab-button" data-tab="classes">Classes</button>
+      <button class="tab-button" data-tab="eleves">Élèves</button>
+      <button class="tab-button" data-tab="paiements">Paiements</button>
+      <button class="tab-button" data-tab="rapports">Rapports</button>
+    </div>
+
+    <section id="dashboard" class="tab-content active">
+      <h2>Tableau de bord</h2>
+      <p>Bienvenue dans l'application de gestion d'établissement scolaire EcoGestion.</p>
+      <button id="genererRapportPaiementPDF">Générer rapport de paiement PDF</button>
+      <div id="stats">
+      </div>
+    </section>
+
+    <section id="classes" class="tab-content">
+      <h2>Gestion des Classes</h2>
+      <button id="ajouterClasse">Ajouter une classe</button>
+      <div id="listeClasses">
+      </div>
+    </section>
+
+    <section id="eleves" class="tab-content">
+      <h2>Gestion des Élèves</h2>
+      <div id="listeEleves">
+      </div>
+    </section>
+
+    <section id="paiements" class="tab-content">
+      <h2>Suivi des Paiements</h2>
+      <div id="listePaiements">
+      </div>
+    </section>
+
+    <section id="rapports" class="tab-content">
+      <h2>Rapports</h2>
+      <button id="genererRapportInscriptions">Générer rapport des inscriptions</button>
+      <button id="genererRapportPaiements">Générer rapport des paiements</button>
+      <div id="resultatRapports">
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    let eleves = [];
+    let classes = [];
+    let paiements = [];
+
+    function generateMatricule() {
+      const year = new Date().getFullYear().toString().slice(-2);
+      const random = Math.floor(1000 + Math.random() * 9000);
+      return `${year}${random}`;
+    }
+
+    function loadData() {
+      eleves = JSON.parse(localStorage.getItem('eleves')) || [];
+      classes = JSON.parse(localStorage.getItem('classes')) || [];
+      paiements = JSON.parse(localStorage.getItem('paiements')) || [];
+    }
+
+    function saveData() {
+      localStorage.setItem('eleves', JSON.stringify(eleves));
+      localStorage.setItem('classes', JSON.stringify(classes));
+      localStorage.setItem('paiements', JSON.stringify(paiements));
+    }
+
+    loadData();
+
+    function generateId() {
+      return Math.random().toString(36).substr(2, 9);
+    }
+
+    function ajouterPaiement(eleveId, montant, datePaiement, versement) {
+      const nouveauPaiement = {
+        id: generateId(),
+        eleveId,
+        montant: Number(montant),
+        datePaiement,
+        versement
+      };
+      paiements.push(nouveauPaiement);
+      saveData();
+      mettreAJourListePaiements();
+    }
+
+    function ajouterEleve(nom, prenom, contactParents, classeId, matricule) {
+      const nouvelEleve = {
+        id: generateId(),
+        matricule: matricule,
+        nom,
+        prenom,
+        contactParents,
+        classeId
+      };
+      eleves.push(nouvelEleve);
+      saveData();
+      mettreAJourListeEleves();
+    }
+
+    function ajouterClasse(nom, niveau) {
+      const nouvelleClasse = {
+        id: generateId(),
+        nom,
+        niveau
+      };
+      classes.push(nouvelleClasse);
+      saveData();
+      mettreAJourListeClasses();
+    }
+
+    function ajouterEleveAClasse(classeId) {
+      const classe = classes.find(c => c.id === classeId);
+      const container = document.createElement('div');
+      container.innerHTML = `
+        <div class="modal-form">
+          <h3>Ajouter un élève à la classe ${classe.nom}</h3>
+          <form id="ajoutEleveForm">
+            <div class="form-group">
+              <label>Matricule:</label>
+              <input type="text" id="matricule" required placeholder="Ex: 23XXXX">
+            </div>
+            <div class="form-group">
+              <label>Nom et Prénom:</label>
+              <input type="text" id="nomComplet" required placeholder="Ex: Diallo Mamadou">
+            </div>
+            <div class="form-group">
+              <label>Contact Parents:</label>
+              <input type="tel" id="contactParents" required placeholder="Ex: 0123456789">
+            </div>
+            <div class="form-buttons">
+              <button type="submit">Ajouter</button>
+              <button type="button" onclick="this.parentElement.parentElement.parentElement.remove()">Annuler</button>
+            </div>
+          </form>
+        </div>
+      `;
+
+      document.body.appendChild(container);
+
+      document.getElementById('ajoutEleveForm').onsubmit = (e) => {
+        e.preventDefault();
+        const matricule = document.getElementById('matricule').value;
+        const nomComplet = document.getElementById('nomComplet').value;
+        const contactParents = document.getElementById('contactParents').value;
+        
+        if (matricule && nomComplet && contactParents) {
+          const [nom, ...prenomParts] = nomComplet.split(' ');
+          const prenom = prenomParts.join(' ');
+          ajouterEleve(nom, prenom, contactParents, classeId, matricule);
+          container.remove();
+        }
+      };
+    }
+
+    function afficherPaiementsEleve(eleveId) {
+      const eleve = eleves.find(e => e.id === eleveId);
+      const paiementsEleve = paiements.filter(p => p.eleveId === eleveId);
+      const listePaiements = document.getElementById('listePaiements');
+      listePaiements.innerHTML = `<h3>Paiements de ${eleve.nom} ${eleve.prenom}</h3>`;
+      const table = document.createElement('table');
+      table.innerHTML = `
+        <tr>
+          <th>Versement</th>
+          <th>Montant (FCFA)</th>
+          <th>Date de paiement</th>
+          <th>Actions</th>
+        </tr>
+      `;
+      for (let i = 0; i < 3; i++) {
+        const paiement = paiementsEleve[i] || { montant: 0, datePaiement: '' };
+        const tr = document.createElement('tr');
+        const inputMontant = document.createElement('input');
+        inputMontant.type = 'number';
+        inputMontant.value = paiement.montant;
+        inputMontant.min = 0;
+        const inputDate = document.createElement('input');
+        inputDate.type = 'date';
+        inputDate.value = paiement.datePaiement;
+        const saveButton = document.createElement('button');
+        saveButton.textContent = 'Enregistrer';
+        saveButton.onclick = () => sauvegarderPaiement(eleveId, i + 1, inputMontant.value, inputDate.value);
+        tr.innerHTML = `
+          <td data-label="Versement">${i + 1}e versement</td>
+        `;
+        const tdMontant = document.createElement('td');
+        tdMontant.appendChild(inputMontant);
+        tr.appendChild(tdMontant);
+        const tdDate = document.createElement('td');
+        tdDate.appendChild(inputDate);
+        tr.appendChild(tdDate);
+        const tdActions = document.createElement('td');
+        tdActions.appendChild(saveButton);
+        tr.appendChild(tdActions);
+        table.appendChild(tr);
+      }
+      const backButton = document.createElement('button');
+      backButton.textContent = 'Retour';
+      backButton.onclick = () => mettreAJourListePaiements();
+      listePaiements.appendChild(table);
+      listePaiements.appendChild(backButton);
+    }
+
+    function sauvegarderPaiement(eleveId, versement, montant, datePaiement) {
+      paiements = paiements.filter(p => !(p.eleveId === eleveId && p.versement === versement));
+      
+      if (montant && datePaiement) {
+        ajouterPaiement(eleveId, montant, datePaiement, versement);
+      }
+      
+      afficherPaiementsEleve(eleveId);
+    }
+
+    function supprimerAvecConfirmation(type, id) {
+      const password = prompt("Entrez le mot de passe pour confirmer la suppression :");
+      if (password === "1234") {
+        if (type === "eleve") {
+          eleves = eleves.filter(e => e.id !== id);
+          mettreAJourListeEleves();
+        } else if (type === "classe") {
+          classes = classes.filter(c => c.id !== id);
+          mettreAJourListeClasses();
+        }
+        saveData();
+      } else {
+        alert("Mot de passe incorrect. Suppression annulée.");
+      }
+    }
+
+    function filtrerEleves(searchTerm) {
+      if (!searchTerm) return eleves;
+      
+      searchTerm = searchTerm.toLowerCase().trim();
+      
+      return eleves.filter(eleve => {
+        const matriculeMatch = eleve.matricule?.toLowerCase() === searchTerm;
+        const fullName = `${eleve.nom} ${eleve.prenom}`.toLowerCase();
+        const exactNameMatch = fullName === searchTerm;
+        const partialNameMatch = fullName.includes(searchTerm);
+        
+        // Return exact matches first, then partial matches
+        return matriculeMatch || exactNameMatch || partialNameMatch;
+      });
+    }
+
+    function mettreAJourListeEleves(filteredEleves = eleves) {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+      const listeEleves = document.getElementById('listeEleves');
+      listeEleves.innerHTML = '<h3>Liste des élèves</h3>';
+      const table = document.createElement('table');
+      table.innerHTML = `
+        <tr>
+          <th>Matricule</th>
+          <th>Nom et Prénom</th>
+          <th>Contact Parents</th>
+          <th>Actions</th>
+        </tr>
+      `;
+      
+      filteredEleves.forEach(eleve => {
+        const tr = document.createElement('tr');
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Supprimer';
+        deleteButton.onclick = () => supprimerAvecConfirmation('eleve', eleve.id);
+        const paymentButton = document.createElement('button');
+        paymentButton.textContent = 'Paiements';
+        paymentButton.onclick = () => {
+          afficherPaiementsEleve(eleve.id);
+          const paiementsTab = document.querySelector('.tab-button[data-tab="paiements"]');
+          paiementsTab.click();
+        };
+        
+        // Add highlighting for matches
+        const isMatch = searchTerm && (
+          eleve.matricule?.toLowerCase() === searchTerm ||
+          `${eleve.nom} ${eleve.prenom}`.toLowerCase().includes(searchTerm)
+        );
+        
+        if (isMatch) {
+          tr.classList.add('highlighted');
+        }
+        
+        tr.innerHTML = `
+          <td data-label="Matricule">${eleve.matricule}</td>
+          <td data-label="Nom et Prénom">${eleve.nom} ${eleve.prenom}</td>
+          <td data-label="Contact Parents">${eleve.contactParents}</td>
+        `;
+        const tdActions = document.createElement('td');
+        tdActions.appendChild(deleteButton);
+        tdActions.appendChild(paymentButton);
+        tr.appendChild(tdActions);
+        table.appendChild(tr);
+      });
+      listeEleves.appendChild(table);
+    }
+
+    function mettreAJourListeClasses() {
+      const listeClasses = document.getElementById('listeClasses');
+      listeClasses.innerHTML = '<h3>Liste des classes</h3>';
+      const table = document.createElement('table');
+      table.innerHTML = `
+        <tr>
+          <th>Nom</th>
+          <th>Niveau</th>
+          <th>Actions</th>
+        </tr>
+      `;
+      classes.forEach(classe => {
+        const viewStudentsButton = document.createElement('button');
+        viewStudentsButton.textContent = 'Voir les élèves';
+        viewStudentsButton.onclick = () => afficherElevesParClasse(classe.id);
+
+        const addStudentButton = document.createElement('button');
+        addStudentButton.textContent = 'Ajouter un élève';
+        addStudentButton.onclick = () => ajouterEleveAClasse(classe.id);
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Supprimer';
+        deleteButton.onclick = () => supprimerAvecConfirmation('classe', classe.id);
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          
+          <td data-label="Nom">${classe.nom}</td>
+          <td data-label="Niveau">${classe.niveau}</td>
+        `;
+        const tdActions = document.createElement('td');
+        tdActions.appendChild(viewStudentsButton);
+        tdActions.appendChild(addStudentButton);
+        tdActions.appendChild(deleteButton);
+        tr.appendChild(tdActions);
+        table.appendChild(tr);
+      });
+      listeClasses.appendChild(table);
+    }
+
+    function afficherElevesParClasse(classeId) {
+      const elevesClasse = eleves.filter(e => e.classeId === classeId);
+      const classe = classes.find(c => c.id === classeId);
+      const listeEleves = document.getElementById('listeEleves');
+      listeEleves.innerHTML = `<h3>Élèves de la classe ${classe.nom}</h3>`;
+      const table = document.createElement('table');
+      table.innerHTML = `
+        <tr>
+          <th>Nom et Prénom</th>
+          <th>Contact Parents</th>
+          <th>Actions</th>
+        </tr>
+      `;
+      elevesClasse.forEach(eleve => {
+        const tr = document.createElement('tr');
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Supprimer';
+        deleteButton.onclick = () => supprimerAvecConfirmation('eleve', eleve.id);
+        const paymentButton = document.createElement('button');
+        paymentButton.textContent = 'Paiements';
+        paymentButton.onclick = () => {
+          afficherPaiementsEleve(eleve.id);
+          const paiementsTab = document.querySelector('.tab-button[data-tab="paiements"]');
+          paiementsTab.click();
+        };
+        tr.innerHTML = `
+          <td data-label="Nom et Prénom">${eleve.nom} ${eleve.prenom}</td>
+          <td data-label="Contact Parents">${eleve.contactParents}</td>
+        `;
+        const tdActions = document.createElement('td');
+        tdActions.appendChild(deleteButton);
+        tdActions.appendChild(paymentButton);
+        tr.appendChild(tdActions);
+        table.appendChild(tr);
+      });
+      listeEleves.appendChild(table);
+      const elevesTab = document.querySelector('.tab-button[data-tab="eleves"]');
+      elevesTab.click();
+    }
+
+    function genererStatistiques() {
+      const stats = document.getElementById('stats');
+      stats.innerHTML = `
+        <h3>Statistiques</h3>
+        <p>Nombre total d'élèves : ${eleves.length}</p>
+        <p>Nombre total de classes : ${classes.length}</p>
+        <p>Montant total des paiements : ${paiements.reduce((sum, p) => sum + p.montant, 0)} FCFA</p>
+      `;
+
+      const ctx = document.createElement('canvas');
+      stats.appendChild(ctx);
+
+      const paiementsParMois = paiements.reduce((acc, p) => {
+        const mois = new Date(p.datePaiement).getMonth();
+        acc[mois] = (acc[mois] || 0) + p.montant;
+        return acc;
+      }, {});
+
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
+          datasets: [{
+            label: 'Paiements par mois (FCFA)',
+            data: Object.values(paiementsParMois),
+            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+            borderColor: 'rgb(54, 162, 235)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+
+    function mettreAJourListePaiements() {
+      const listePaiements = document.getElementById('listePaiements');
+      listePaiements.innerHTML = '<h3>Liste des paiements</h3>';
+      const table = document.createElement('table');
+      table.innerHTML = `
+        <tr>
+          <th>Élève</th>
+          <th>Montant total (FCFA)</th>
+          <th>Actions</th>
+        </tr>
+      `;
+      
+      const paiementsParEleve = eleves.map(eleve => {
+        const paiementsEleve = paiements.filter(p => p.eleveId === eleve.id);
+        const montantTotal = paiementsEleve.reduce((sum, p) => sum + p.montant, 0);
+        return { eleve, montantTotal };
+      });
+
+      paiementsParEleve.forEach(({ eleve, montantTotal }) => {
+        const tr = document.createElement('tr');
+        const detailsButton = document.createElement('button');
+        detailsButton.textContent = 'Détails';
+        detailsButton.onclick = () => afficherPaiementsEleve(eleve.id);
+        tr.innerHTML = `
+          <td data-label="Élève">${eleve.nom} ${eleve.prenom}</td>
+          <td data-label="Montant total">${montantTotal}</td>
+        `;
+        const tdActions = document.createElement('td');
+        tdActions.appendChild(detailsButton);
+        tr.appendChild(tdActions);
+        table.appendChild(tr);
+      });
+      
+      listePaiements.appendChild(table);
+    }
+
+    document.getElementById('ajouterClasse').addEventListener('click', () => {
+      const nom = prompt('Nom de la classe :');
+      const niveau = prompt('Niveau de la classe :');
+      ajouterClasse(nom, niveau);
+    });
+
+    document.getElementById('genererRapportInscriptions').addEventListener('click', () => {
+      const rapport = eleves.map(e => {
+        const classe = classes.find(c => c.id === e.classeId);
+        return `${e.nom} ${e.prenom} - Classe: ${classe ? classe.nom : 'Non assigné'}`;
+      }).join('\n');
+      document.getElementById('resultatRapports').innerHTML = `<h3>Rapport des inscriptions</h3><pre>${rapport}</pre>`;
+    });
+
+    document.getElementById('genererRapportPaiements').addEventListener('click', () => {
+      const rapport = paiements.map(p => {
+        const eleve = eleves.find(e => e.id === p.eleveId);
+        return `${eleve ? `${eleve.nom} ${eleve.prenom}` : 'Élève inconnu'} - ${p.montant} FCFA - ${p.datePaiement}`;
+      }).join('\n');
+      document.getElementById('resultatRapports').innerHTML = `<h3>Rapport des paiements</h3><pre>${rapport}</pre>`;
+    });
+
+    document.getElementById('genererRapportPaiementPDF').addEventListener('click', genererRapportPaiementPDF);
+
+    function genererRapportPaiementPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      doc.text("Rapport de Paiement", 10, 10);
+      
+      let y = 20;
+      paiements.forEach((paiement, index) => {
+        const eleve = eleves.find(e => e.id === paiement.eleveId);
+        const ligne = `${index + 1}. ${eleve ? eleve.nom + ' ' + eleve.prenom : 'Élève inconnu'} - ${paiement.montant} FCFA - ${paiement.datePaiement}`;
+        doc.text(ligne, 10, y);
+        y += 10;
+        
+        if (y > 280) {
+          doc.addPage();
+          y = 20;
+        }
+      });
+      
+      doc.save("rapport_paiements.pdf");
+    }
+
+    document.getElementById('searchInput').addEventListener('input', function() {
+      const searchTerm = this.value;
+      if (searchTerm.length > 0) {
+        const filteredEleves = filtrerEleves(searchTerm);
+        mettreAJourListeEleves(filteredEleves);
+        
+        if (filteredEleves.length === 0) {
+          const listeEleves = document.getElementById('listeEleves');
+          listeEleves.innerHTML += '<p>Aucun élève trouvé</p>';
+        }
+      } else {
+        mettreAJourListeEleves();
+      }
+    });
+
+    document.getElementById('refreshSearch').addEventListener('click', () => {
+      document.getElementById('searchInput').value = '';
+      mettreAJourListeEleves();
+    });
+
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const tabId = button.getAttribute('data-tab');
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+        button.classList.add('active');
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+
+    ajouterClasse('6ème A', 'Collège');
+    ajouterClasse('5ème B', 'Collège');
+    ajouterEleve('Dupont', 'Jean', '0671234567', classes[0].id, '230001');
+    ajouterEleve('Martin', 'Sophie', '0677654321', classes[1].id, '230002');
+    ajouterPaiement(eleves[0].id, 500, '2023-09-01', 1);
+    ajouterPaiement(eleves[1].id, 500, '2023-09-05', 1);
+
+    mettreAJourListeEleves();
+    mettreAJourListeClasses();
+    mettreAJourListePaiements();
+    genererStatistiques();
+  </script>
+</body></html>
